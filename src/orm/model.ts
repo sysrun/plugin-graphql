@@ -262,7 +262,7 @@ export default class Model {
     return this.baseModel
       .query()
       .withAllRecursive()
-      .where("id", toNumber(id))
+      .where("id", id)
       .first();
   }
 
