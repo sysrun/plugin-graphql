@@ -7747,17 +7747,6 @@ function takeWhile(array, predicate) {
 function removeSymbols(input) {
     return JSON.parse(JSON.stringify(input));
 }
-/**
- * Converts the argument into a number.
- */
-function toNumber(input) {
-    if (input === null)
-        return 0;
-    if (typeof input === "string" && input.startsWith("$uid")) {
-        return input;
-    }
-    return parseInt(input.toString(), 10);
-}
 
 /**
  * Vuex-ORM-Apollo Debug Logger.
@@ -15376,7 +15365,7 @@ var Action = /** @class */ (function () {
                         if (!(name !== context.adapter.getNameForDestroy(model))) return [3 /*break*/, 4];
                         newData = newData[Object.keys(newData)[0]];
                         // IDs as String cause terrible issues, so we convert them to integers.
-                        newData.id = toNumber(newData.id);
+                        newData.id = newData.id;
                         return [4 /*yield*/, Store.insertData((_a = {}, _a[model.pluralName] = newData, _a), dispatch)];
                     case 3:
                         insertedData = _b.sent();
@@ -15469,7 +15458,7 @@ var Destroy = /** @class */ (function (_super) {
         record.$destroy = function () {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
-                    return [2 /*return*/, this.$dispatch("destroy", { id: toNumber(this.$id) })];
+                    return [2 /*return*/, this.$dispatch("destroy", { id: this.$id })];
                 });
             });
         };
@@ -15626,7 +15615,7 @@ var Mutate = /** @class */ (function (_super) {
                 return __generator(this, function (_b) {
                     args = args || {};
                     if (!args["id"])
-                        args["id"] = toNumber(this.$id);
+                        args["id"] = this.$id;
                     return [2 /*return*/, this.$dispatch("mutate", { name: name, args: args, multiple: multiple })];
                 });
             });
@@ -15719,7 +15708,7 @@ var Persist = /** @class */ (function (_super) {
                         mutationName = Context.getInstance().adapter.getNameForPersist(model);
                         oldRecord = model.getRecordWithId(id);
                         mockReturnValue = model.$mockHook("persist", {
-                            id: toNumber(id),
+                            id: id,
                             args: args || {}
                         });
                         if (!mockReturnValue) return [3 /*break*/, 3];
@@ -15874,7 +15863,7 @@ var Query = /** @class */ (function (_super) {
                 return __generator(this, function (_b) {
                     filter = filter || {};
                     if (!filter["id"])
-                        filter["id"] = toNumber(this.$id);
+                        filter["id"] = this.$id;
                     return [2 /*return*/, this.$dispatch("query", { name: name, filter: filter, multiple: multiple, bypassCache: bypassCache })];
                 });
             });

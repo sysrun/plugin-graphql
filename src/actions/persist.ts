@@ -3,7 +3,6 @@ import { ActionParams, Data, PatchedModel } from "../support/interfaces";
 import Action from "./action";
 import Model from "../orm/model";
 import { Store } from "../orm/store";
-import { toNumber } from "../support/utils";
 
 /**
  * Persist action for sending a create mutation. Will be used for record.$persist().
@@ -39,7 +38,7 @@ export default class Persist extends Action {
       const oldRecord = model.getRecordWithId(id)!;
 
       const mockReturnValue = model.$mockHook("persist", {
-        id: toNumber(id),
+        id: id,
         args: args || {}
       });
 

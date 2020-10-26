@@ -3,7 +3,6 @@ import Action from "./action";
 import Context from "../common/context";
 import Schema from "../graphql/schema";
 import { Store } from "../orm/store";
-import { toNumber } from "../support/utils";
 
 /**
  * Mutate action for sending a custom mutation. Will be used for Model.mutate() and record.$mutate().
@@ -25,7 +24,7 @@ export default class Mutate extends Action {
 
     record.$mutate = async function({ name, args, multiple }: ActionParams) {
       args = args || {};
-      if (!args["id"]) args["id"] = toNumber(this.$id);
+      if (!args["id"]) args["id"] = this.$id;
 
       return this.$dispatch("mutate", { name, args, multiple });
     };

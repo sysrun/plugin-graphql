@@ -7645,17 +7645,6 @@ function takeWhile(array, predicate) {
 function removeSymbols(input) {
     return JSON.parse(JSON.stringify(input));
 }
-/**
- * Converts the argument into a number.
- */
-function toNumber(input) {
-    if (input === null)
-        return 0;
-    if (typeof input === "string" && input.startsWith("$uid")) {
-        return input;
-    }
-    return parseInt(input.toString(), 10);
-}
 
 /**
  * Vuex-ORM-Apollo Debug Logger.
@@ -15359,7 +15348,7 @@ class Action {
             if (name !== context.adapter.getNameForDestroy(model)) {
                 newData = newData[Object.keys(newData)[0]];
                 // IDs as String cause terrible issues, so we convert them to integers.
-                newData.id = toNumber(newData.id);
+                newData.id = newData.id;
                 const insertedData = await Store.insertData({ [model.pluralName]: newData }, dispatch);
                 // Try to find the record to return
                 const records = insertedData[model.pluralName];
@@ -15442,7 +15431,7 @@ class Destroy extends Action {
         const record = context.components.Model.prototype;
         context.components.Actions.destroy = Destroy.call.bind(Destroy);
         record.$destroy = async function () {
-            return this.$dispatch("destroy", { id: toNumber(this.$id) });
+            return this.$dispatch("destroy", { id: this.$id });
         };
         record.$deleteAndDestroy = async function () {
             await this.$delete();
@@ -15544,7 +15533,7 @@ class Mutate extends Action {
         record.$mutate = async function ({ name, args, multiple }) {
             args = args || {};
             if (!args["id"])
-                args["id"] = toNumber(this.$id);
+                args["id"] = this.$id;
             return this.$dispatch("mutate", { name, args, multiple });
         };
     }
@@ -15609,7 +15598,7 @@ class Persist extends Action {
             const mutationName = Context.getInstance().adapter.getNameForPersist(model);
             const oldRecord = model.getRecordWithId(id);
             const mockReturnValue = model.$mockHook("persist", {
-                id: toNumber(id),
+                id: id,
                 args: args || {}
             });
             if (mockReturnValue) {
@@ -15715,7 +15704,7 @@ class Query extends Action {
         record.$customQuery = async function ({ name, filter, multiple, bypassCache }) {
             filter = filter || {};
             if (!filter["id"])
-                filter["id"] = toNumber(this.$id);
+                filter["id"] = this.$id;
             return this.$dispatch("query", { name, filter, multiple, bypassCache });
         };
     }
